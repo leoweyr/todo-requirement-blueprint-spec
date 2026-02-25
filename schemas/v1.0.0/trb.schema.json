@@ -1,0 +1,156 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/leoweyr/todo-requirement-blueprint-spec/master/schemas/v1.0.0/trb.schema.json",
+    "title": "TODO Requirement Blueprint (TRB) Node",
+    "description": "A declarative, executable blueprint specification that eradicates over-engineering by aligning business strategy with system architecture through a strict Demand-Pull model.",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "description": "Global unique identifier of the node.",
+            "pattern": "^[a-z0-9_]+$"
+        },
+        "description": {
+            "type": "string",
+            "description": "Semantic description or human-readable name of the node."
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the node under the Architecture-as-Code paradigm (e.g., v1.0.0)."
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of the last version update, used for Git-based temporal evolution parsing (ISO 8601)."
+        },
+        "status": {
+            "type": "object",
+            "description": "User-defined current evolutionary status of the node.",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/UserDefinedEnum"
+                }
+            ]
+        },
+        "metadata": {
+            "type": "object",
+            "description": "Flexible metadata for static architectural context (e.g., Git repository URLs, layer coordinates, domain ownership).",
+            "additionalProperties": true
+        },
+        "edges": {
+            "type": "array",
+            "description": "Array of edges composed within this node, representing upstream demands.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier of the edge."
+                    },
+                    "demand_description": {
+                        "type": "string",
+                        "description": "Immutable demand description representing the eternal business pain point or requirement."
+                    },
+                    "history": {
+                        "type": "array",
+                        "description": "Evolutionary history array recording how this demand's technical implementation has evolved over time.",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "version": {
+                                    "type": "string",
+                                    "description": "Version of the edge for this specific historical iteration."
+                                },
+                                "updated_at": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "Timestamp when this edge version was introduced or modified (ISO 8601)."
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "description": "Nature of the upstream dependency.",
+                                    "enum": [
+                                        "REQUIRES",
+                                        "OPTIMIZES"
+                                    ]
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "description": "Current effective status of this historical edge version.",
+                                    "enum": [
+                                        "ACTIVE",
+                                        "DEPRECATED",
+                                        "CUT"
+                                    ]
+                                },
+                                "target_upstream_id": {
+                                    "type": "string",
+                                    "description": "ID of the target upstream node fulfilling this demand."
+                                },
+                                "evolution_reason": {
+                                    "type": "object",
+                                    "description": "User-defined business or technical catalyst for this edge iteration.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/definitions/UserDefinedEnum"
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "version",
+                                "updated_at",
+                                "type",
+                                "status",
+                                "target_upstream_id",
+                                "evolution_reason"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "demand_description",
+                    "history"
+                ]
+            }
+        }
+    },
+    "x-defs": {
+        "type": "object",
+        "description": "User-defined dictionary for YAML anchors and aliases.",
+        "additionalProperties": true
+    },
+    "required": [
+        "id",
+        "description",
+        "version",
+        "updated_at",
+        "status",
+        "metadata",
+        "edges"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+        "UserDefinedEnum": {
+            "type": "object",
+            "description": "A user-defined enumeration item containing a name and a detailed semantic description.",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The identifier name of the enumeration item (e.g., 'MANUAL', 'SCRIPTED', 'AUTOMATED')."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Detailed semantic explanation of this enumeration item in the user's specific context."
+                }
+            },
+            "required": [
+                "name",
+                "description"
+            ],
+            "additionalProperties": false
+        }
+    }
+}
