@@ -8,7 +8,7 @@
         "id": {
             "type": "string",
             "description": "Global unique identifier of the node.",
-            "pattern": "^[a-z0-9_]+$"
+            "pattern": "^[a-z0-9_-]+$"
         },
         "description": {
             "type": "string",
@@ -45,7 +45,8 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "Unique identifier of the edge."
+                        "description": "Unique identifier of the edge.",
+                        "pattern": "^[a-z0-9_-]+$"
                     },
                     "demand_description": {
                         "type": "string",
