@@ -1,8 +1,6 @@
 # TODO Requirement Blueprint (TRB) Specification
 
-
-
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](#) [![License](https://img.shields.io/badge/license-MIT-green.svg)](#)
+[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](#) [![License](https://img.shields.io/badge/license-MIT-green.svg)](#)
 
 **Eradicate over-engineering. A declarative, executable blueprint specification to align business strategy with system architecture through a strict Demand-Pull model.**
 
@@ -36,32 +34,32 @@ In traditional graph databases, lines merely represent dependencies. In the TRB 
 
 ### 4. Developer Experience (DX) First
 
-Engineered for human architects, TRB natively embraces YAML anchors (`&`) and aliases (`*`). Through the `x-defs` global dictionary, TRB achieves "define once, reference everywhere" for domain-specific vocabularies, ensuring the blueprint remains DRY (Don't Repeat Yourself) and beautifully readable.
+Engineered for human architects, TRB natively embraces YAML anchors (`&`) and aliases (`*`). Through the `node_statuses` and `edge_evolution_reasons` global dictionaries, TRB achieves "define once, reference everywhere" for domain-specific vocabularies, ensuring the blueprint remains DRY (Don't Repeat Yourself) and beautifully readable.
 
 ## 📐 The Specification Anatomy
 
-### I. The Global Dictionary (`x-defs`)
+### I. The Global Dictionaries
 
 The ontology of your architecture. It defines the reusable enumeration items for the entire blueprint.
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/leoweyr/todo-requirement-blueprint-spec/master/schemas/v1.0.1/trb.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/leoweyr/todo-requirement-blueprint-spec/master/schemas/v1.0.2/trb.schema.json
 
-x-defs:
-    nodeStatuses:
-        automated: &NODE_STATUS_AUTOMATED
-            name: "AUTOMATED"
-            description: "Fully automated cash-printing node, zero human intervention."
-        scripted: &NODE_STATUS_SCRIPTED
-            name: "SCRIPTED"
-            description: "Semi-automated via scripts. Carries technical debt."
-    edgeEvolutionReasons:
-  	    initialMvp: &EDGE_EVOLUTION_REASON_INITIAL_MVP
-  		    name: "INITIAL_MVP"
-  		    description: "Fast iteration to validate market fit using cheapest tools."
-        costReduction: &EDGE_EVOLUTION_REASON_COST_REDUCTION
-            name: "COST_REDUCTION"
-            description: "Architectural pivot to reduce server or API costs."
+node_statuses:
+    automated: &NODE_STATUS_AUTOMATED
+        name: "AUTOMATED"
+        description: "Fully automated cash-printing node, zero human intervention."
+    scripted: &NODE_STATUS_SCRIPTED
+        name: "SCRIPTED"
+        description: "Semi-automated via scripts. Carries technical debt."
+
+edge_evolution_reasons:
+    initial_mvp: &EDGE_EVOLUTION_REASON_INITIAL_MVP
+        name: "INITIAL_MVP"
+        description: "Fast iteration to validate market fit using cheapest tools."
+    cost_reduction: &EDGE_EVOLUTION_REASON_COST_REDUCTION
+        name: "COST_REDUCTION"
+        description: "Architectural pivot to reduce server or API costs."
 ```
 
 ### II. Node Anatomy
@@ -69,21 +67,22 @@ x-defs:
 A strategic/technical module with a strong evolutionary lifecycle. Notice the use of `description` instead of `name`, and the strictly static `metadata`.
 
 ```yaml
-id: "touchpoint.discord-growth-bot"
-description: "Core business engine: Discord automated community engagement."
-version: "v1.2.0"
-updated_at: "2026-02-25T14:00:00Z"
-
-# Referenced from x-defs
-status: *NODE_STATUS_AUTOMATED
-
-# Flexible but strictly for STATIC architectural context. No runtime data!
-metadata:
-    layer: "touchpoint"
-    # This is a sample URL for demonstration purposes only.
-    repo_url: "https://github.com/leoweyr/discord-growth-bot"
-
-edges: [ /* See Section III */ ]
+nodes:
+  - id: "touchpoint-discord-growth-bot"
+    description: "Core business engine: Discord automated community engagement."
+    version: "v1.2.0"
+    updated_at: "2026-02-25T14:00:00Z"
+    
+    # Referenced from global dictionary.
+    status: *NODE_STATUS_AUTOMATED
+    
+    # Flexible but strictly for STATIC architectural context. No runtime data!
+    metadata:
+        layer: "touchpoint"
+        # This is a sample URL for demonstration purposes only.
+        repo_url: "https://github.com/leoweyr/discord-growth-bot"
+    
+    edges: [ /* See Section III */ ]
 ```
 
 ### III. Edges & Evolutionary History
@@ -91,27 +90,27 @@ edges: [ /* See Section III */ ]
 The soul of TRB. Edges represent the downstream node's "demand" from upstream components. Enums are strictly `SCREAMING_SNAKE_CASE`.
 
 ```yaml
-edges:
-  - id: "edge_storage_demand"
-    # Immutable demand: The eternal business pain point.
-    demand_description: "Requires high-availability event storage for user profiles."
-    
-    # Evolutionary History: How this pain point was solved over time.
-    history:
-      - version: "v1.0.0"
-        updated_at: "2026-01-01T10:00:00Z"
-        type: "REQUIRES"
-        status: "CUT"
-        target_upstream_id: "infra.db.local_sqlite"
-        evolution_reason: *EDGE_EVOLUTION_REASON_INITIAL_MVP
-          
-      - version: "v2.0.0"
-        updated_at: "2026-02-25T14:00:00Z"
-        type: "REQUIRES"
-        status: "ACTIVE"
-        target_upstream_id: "infra.db.pg_event_store"
-        # Reusing the dictionary definition!
-        evolution_reason: *EDGE_EVOLUTION_REASON_COST_REDUCTION
+    edges:
+      - id: "edge-storage-demand"
+        # Immutable demand: The eternal business pain point.
+        demand_description: "Requires high-availability event storage for user profiles."
+        
+        # Evolutionary History: How this pain point was solved over time.
+        history:
+          - version: "v1.0.0"
+            updated_at: "2026-01-01T10:00:00Z"
+            type: "REQUIRES"
+            status: "CUT"
+            target_upstream_id: "infra.db.local_sqlite"
+            evolution_reason: *EDGE_EVOLUTION_REASON_INITIAL_MVP
+              
+          - version: "v2.0.0"
+            updated_at: "2026-02-25T14:00:00Z"
+            type: "REQUIRES"
+            status: "ACTIVE"
+            target_upstream_id: "infra.db.pg_event_store"
+            # Reusing the dictionary definition!
+            evolution_reason: *EDGE_EVOLUTION_REASON_COST_REDUCTION
 ```
 
 ## 🚀 Use Cases: What Can You Build With TRB?
@@ -124,7 +123,7 @@ Once your architecture is governed by the TRB specification, your system unlocks
 
 ## 📜 Schema Validation
 
-The rigorous JSON Schema enforcing these rules is located at `schemas/v1.0.1/trb.schema.json`.
+The rigorous JSON Schema enforcing these rules is located at `schemas/v1.0.2/trb.schema.json`.
 
 By adding the `$schema` comment to the top of your `.yaml` files, you instantly unlock flawless IntelliSense, auto-completion, and syntax validation in VS Code, WebStorm, and other modern IDEs.
 
