@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://raw.githubusercontent.com/leoweyr/todo-requirement-blueprint-spec/master/schemas/v1.0.4/trb.schema.json",
+    "$id": "https://raw.githubusercontent.com/leoweyr/todo-requirement-blueprint-spec/master/schemas/v1.0.5/trb.schema.json",
     "title": "TODO Requirement Blueprint (TRB)",
     "description": "A declarative, executable blueprint specification that eradicates over-engineering by aligning business strategy with system architecture through a strict Demand-Pull model.",
     "type": "object",
@@ -168,8 +168,7 @@
                 "description",
                 "version",
                 "updated_at",
-                "status",
-                "edges"
+                "status"
             ],
             "additionalProperties": false
         }
