@@ -1,6 +1,6 @@
 # TODO Requirement Blueprint (TRB) Specification
 
-[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](#) [![License](https://img.shields.io/badge/license-MIT-green.svg)](#)
+[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](#) [![License](https://img.shields.io/badge/license-MIT-green.svg)](#)
 
 **Eradicate over-engineering. A declarative, executable blueprint specification to align business strategy with system architecture through a strict Demand-Pull model.**
 
@@ -43,7 +43,7 @@ Engineered for human architects, TRB natively embraces YAML anchors (`&`) and al
 The ontology of your architecture. It defines the reusable enumeration items for the entire blueprint.
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/leoweyr/todo-requirement-blueprint-spec/master/schemas/v1.0.2/trb.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/leoweyr/todo-requirement-blueprint-spec/master/schemas/v1.0.3/trb.schema.json
 
 node_statuses:
     automated: &NODE_STATUS_AUTOMATED
@@ -123,7 +123,7 @@ Once your architecture is governed by the TRB specification, your system unlocks
 
 ## 📜 Schema Validation
 
-The rigorous JSON Schema enforcing these rules is located at `schemas/v1.0.2/trb.schema.json`.
+The rigorous JSON Schema enforcing these rules is located at `schemas/v1.0.3/trb.schema.json`.
 
 By adding the `$schema` comment to the top of your `.yaml` files, you instantly unlock flawless IntelliSense, auto-completion, and syntax validation in VS Code, WebStorm, and other modern IDEs.
 

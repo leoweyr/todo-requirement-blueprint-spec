@@ -33,7 +33,8 @@
             "properties": {
                 "name": {
                     "type": "string",
-                    "description": "The identifier name of the enumeration item (e.g., 'MANUAL', 'SCRIPTED', 'AUTOMATED')."
+                    "description": "The identifier name of the enumeration item (e.g., 'MANUAL', 'SCRIPTED', 'AUTOMATED').",
+                    "pattern": "^[A-Z0-9_]+$"
                 },
                 "description": {
                     "type": "string",
