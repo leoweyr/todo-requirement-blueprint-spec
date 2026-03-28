@@ -121,6 +121,31 @@ Once your architecture is governed by the TRB specification, your system unlocks
 - **"Zombie Infra" Alarms:** Write a minimalist CI/CD pipeline to scan your blueprints. If an infra node has zero `ACTIVE` edges pointing to it, instantly trigger alerts to cut cloud billing, mercilessly intercepting capital bleed caused by over-engineering.
 - **Architectural Time Travel:** By parsing the timestamps in the `edges.history` array, you can drag a slider in your UI to watch your architecture evolve—playing back the exact moments your system transformed from a pile of manual scripts (v1.0) into a decoupled, event-driven matrix (v3.0).
 
+## 🧩 Build Tooling with [`@todo-requirement-blueprint/domain`](https://github.com/leoweyr/todo-requirement-blueprint-domain)
+
+> [!TIP] 
+>
+> You can use this repository as the specification and schema source of truth, while using `@todo-requirement-blueprint/domain` as a TypeScript domain layer in your own TRB tooling stack.
+
+If you're building TRB applications in TypeScript (CLI tools, visual editors, CI validators, architecture bots), [`@todo-requirement-blueprint/domain`](https://github.com/leoweyr/todo-requirement-blueprint-domain) is a recommended option:
+
+```bash
+npm install @todo-requirement-blueprint/domain
+```
+
+Using this package can help your app treat TRB files as strongly-typed domain objects instead of ad-hoc JSON/YAML structures. In practice, this may give you:
+
+- **Type-safe modeling** for nodes, edges, history, and enums across your codebase.
+- **A shared domain language** across parsers, validators, renderers, and automation workflows.
+- **Lower maintenance cost** by avoiding repeated hand-written interfaces in each tool project.
+
+Recommended integration flow:
+
+1. Parse YAML/JSON input from TRB files.
+2. Convert or map data into the domain package's model types.
+3. Implement your tooling features (graph generation, audits, migration checks, CI guards) against that domain model.
+4. Keep schema validation (`schemas/<version>/trb.schema.json`) as the contract boundary for external blueprint files.
+
 ## 📜 Schema Validation
 
 The rigorous JSON Schema enforcing these rules is located at `schemas/<version>/trb.schema.json`.
