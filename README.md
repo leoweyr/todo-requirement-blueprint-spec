@@ -121,30 +121,32 @@ Once your architecture is governed by the TRB specification, your system unlocks
 - **"Zombie Infra" Alarms:** Write a minimalist CI/CD pipeline to scan your blueprints. If an infra node has zero `ACTIVE` edges pointing to it, instantly trigger alerts to cut cloud billing, mercilessly intercepting capital bleed caused by over-engineering.
 - **Architectural Time Travel:** By parsing the timestamps in the `edges.history` array, you can drag a slider in your UI to watch your architecture evolve—playing back the exact moments your system transformed from a pile of manual scripts (v1.0) into a decoupled, event-driven matrix (v3.0).
 
-## 🧩 Build Tooling with [`@todo-requirement-blueprint/domain`](https://github.com/leoweyr/todo-requirement-blueprint-domain)
+## 🧩 Recommended Packages for Building Tool
 
 > [!TIP] 
 >
-> You can use this repository as the specification and schema source of truth, while using `@todo-requirement-blueprint/domain` as a TypeScript domain layer in your own TRB tooling stack.
+> You can use this repository as the specification and schema source of truth, use `@todo-requirement-blueprint/domain` as the TypeScript domain layer, and use `@todo-requirement-blueprint/engine` as a ready-made TRB object-pool and serialization/deserialization engine in your own TRB tooling stack.
 
-If you're building TRB applications in TypeScript (CLI tools, visual editors, CI validators, architecture bots), [`@todo-requirement-blueprint/domain`](https://github.com/leoweyr/todo-requirement-blueprint-domain) is a recommended option:
+If you're building TRB applications in TypeScript (CLI tools, visual editors, CI validators, architecture bots), start with [`@todo-requirement-blueprint/domain`](https://github.com/leoweyr/todo-requirement-blueprint-domain), and add [`@todo-requirement-blueprint/engine`](https://github.com/leoweyr/todo-requirement-blueprint-engine) when you need schema-aware YAML/JSON loading and emitting:
 
 ```bash
 npm install @todo-requirement-blueprint/domain
+npm install @todo-requirement-blueprint/engine
 ```
 
-Using this package can help your app treat TRB files as strongly-typed domain objects instead of ad-hoc JSON/YAML structures. In practice, this may give you:
+This combination helps your app avoid ad-hoc JSON/YAML handling while keeping tooling code focused on business logic:
 
-- **Type-safe modeling** for nodes, edges, history, and enums across your codebase.
-- **A shared domain language** across parsers, validators, renderers, and automation workflows.
-- **Lower maintenance cost** by avoiding repeated hand-written interfaces in each tool project.
+- **Domain package** gives strongly-typed modeling for nodes, edges, history, and enums.
+- **Engine package** adds reusable registry/object-pool orchestration, schema-aware validation, and YAML round-trip helpers (including anchor/comment handling).
+- **Spec repository** remains the contract boundary via `schemas/<version>/trb.schema.json`.
 
 Recommended integration flow:
 
 1. Parse YAML/JSON input from TRB files.
-2. Convert or map data into the domain package's model types.
-3. Implement your tooling features (graph generation, audits, migration checks, CI guards) against that domain model.
-4. Keep schema validation (`schemas/<version>/trb.schema.json`) as the contract boundary for external blueprint files.
+2. Load/map into `@todo-requirement-blueprint/domain` model types.
+3. Use `@todo-requirement-blueprint/engine` for registry management and serialization/deserialization when your tool needs full document workflows.
+4. Implement tooling features (graph generation, audits, migration checks, CI guards) on top of the typed model/registry.
+5. Keep schema validation as the external file contract boundary.
 
 ## 📜 Schema Validation
 
